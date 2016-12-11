@@ -2,16 +2,16 @@
 
     <h3>*Posts*</h3>
 
-    {% for post in site.posts %}
-    
+    $for(posts)$
+
     <article role="article" class="post-item" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" itemprop="blogPost">
         <div class="content">
-            <a href="{{ post.url | prepend: site.baseurl }}">
-                <h2 class="post-title" itemprop="name">{{ post.title }}.md</h2>
+            <a href="$url$">
+                <h2 class="post-title" itemprop="name">$title$</h2>
             </a>
         </div>
     </article>
 
-    {% endfor %}
+    $endfor$
 
 </div>

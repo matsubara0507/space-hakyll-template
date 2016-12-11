@@ -1,20 +1,16 @@
----
-layout: compress
----
-
 <!DOCTYPE html>
-<html lang="pt-br">
-    {% include head.html %}
+<html lang="ja">
+    $partial("includes/head.html")$
     <body>
-        {% include svg-icons.html %}
-        {% include header-post.html %}
-        {% include tree-posts.html %}
+        $partial("includes/svg-icons.html")$
+        $partial("includes/header-default.html")$
+        $partial("includes/tree-posts.html")$
         <section class="post" itemscope itemtype="http://schema.org/WebPage">
 
             <article role="article" id="scroll" class="post-content" role="main" itemprop="mainContentOfPage">
-                {{ content }}
+                $body$
             </article>
-            {% include scripts.html %}
+            $partial("includes/scripts.html")$
         </section>
     </body>
 </html>

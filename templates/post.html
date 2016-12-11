@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="ja">
+    $partial("includes/head.html")$
+    <body>
+        $partial("includes/svg-icons.html")$
+        $partial("includes/header-post.html")$
+        $partial("includes/tree-posts.html")$
+        <section class="post" itemscope itemtype="http://schema.org/BlogPosting">
+            $if(date)$
+                <div class="time">
+                    <time itemprop="datePublished" datetime="$time$">$date$</time>
+                </div>
+            $endif$
+            <h1 class="post-title" itemprop="name">$title$</h1>
+
+            <article role="article" id="scroll" class="post-content" itemprop="articleBody">
+                $body$
+            </article>
+
+            $partial("includes/comments.html")$
+            $partial("includes/footer.html")$
+            $partial("includes/scripts.html")$
+        </section>
+    </body>
+</html>

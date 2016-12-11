@@ -18,32 +18,41 @@ main = do
         route   idRoute
         compile $ makeItem (compressCss $ styleToCss pygments)
 
-    match ("assets/img/*" .||. "assets/img/*/*") $ do
+    match "assets/**" $ do
         route   idRoute
         compile copyFileCompiler
 
-    match "css/*.css" $ do
-        route   idRoute
-        compile compressCssCompiler
+    match "posts/*" . version "raw" $ do
+        route $ setExtension "html"
+        compile getResourceBody
 
     match "posts/*" $ do
         route $ setExtension "html"
-        compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/post.html"    postCtx
-            >>= loadAndApplyTemplate "templates/default.html" (postCtx `mappend` siteCtx)
-            >>= relativizeUrls
+        compile $ do
+          posts <- take 4 <$> (recentFirst =<< loadAll ("posts/*" .&&. hasVersion "raw"))
+          let
+            postCtx' = mconcat [listField "posts" postCtx (return posts), postCtx, siteCtx]
+
+          pandocCompiler
+              >>= loadAndApplyTemplate "templates/post.html"  postCtx'
+              >>= relativizeUrls
 
     match "about.md" $ do
         route   $ setExtension "html"
-        compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/page.html" (siteCtx `mappend` defaultContext)
-            >>= loadAndApplyTemplate "templates/default.html" (siteCtx `mappend` defaultContext)
-            >>= relativizeUrls
+        compile $ do
+          posts <- take 4 <$> (recentFirst =<< loadAll ("posts/*" .&&. hasVersion "raw"))
+          let
+            aboutCtx = mconcat [listField "posts" postCtx (return posts), siteCtx, defaultContext]
 
-    create ["archive.html"] $ do
+          pandocCompiler
+              >>= loadAndApplyTemplate "templates/about.html" aboutCtx
+              >>= loadAndApplyTemplate "templates/minimal.html" aboutCtx
+              >>= relativizeUrls
+
+    create ["posts.html"] $ do
       route idRoute
       compile $ do
-          posts <- recentFirst =<< loadAll "posts/*"
+          posts <- recentFirst =<< loadAll ("posts/*" .&&. hasVersion "raw")
           let archiveCtx =
                 listField "posts" postCtx (return posts) `mappend`
                 constField "title" "Archives" `mappend`
@@ -51,21 +60,20 @@ main = do
                 defaultContext
 
           makeItem ""
-              >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
-              >>= loadAndApplyTemplate "templates/default.html" archiveCtx
+              >>= loadAndApplyTemplate "templates/posts.html" archiveCtx
               >>= relativizeUrls
 
-    match "index.html" $ do
+    create ["index.html"] $ do
       route idRoute
       compile $ do
-        posts <- take 4 <$> (recentFirst =<< loadAll "posts/*")
+        posts <- take 4 <$> (recentFirst =<< loadAll ("posts/*" .&&. hasVersion "raw"))
         let indexCtx =
               listField "posts" postCtx (return posts) `mappend`
               boolField "isIndex" (const True) `mappend`
               siteCtx `mappend`
               defaultContext
 
-        getResourceBody
+        makeItem ""
             >>= applyAsTemplate indexCtx
             >>= loadAndApplyTemplate "templates/default.html" indexCtx
             >>= relativizeUrls
@@ -73,7 +81,7 @@ main = do
     create ["sitemap.xml"] $ do
          route idRoute
          compile $ do
-           posts <- recentFirst =<< loadAll "posts/*"
+           posts <- recentFirst =<< loadAll ("posts/*" .&&. hasVersion "raw")
            let sitemapCtx =
                  listField "entries" (postCtx `mappend` siteCtx) (return posts)
 
