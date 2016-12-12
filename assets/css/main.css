@@ -1178,7 +1178,10 @@ html, body {
 }
 
 .post-content p code, .post-content li code {
-    color: #615576
+    color: #c1c2c3;
+    background-color: #2f2f33;
+    padding: 3px;
+    border-radius: 3px;
 }
 
 .post-content a {

@@ -2,7 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 import           Data.Monoid (mappend)
 import           Hakyll
-import           Text.Highlighting.Kate (styleToCss, pygments)
+import           Text.Highlighting.Kate (styleToCss)
+import           Text.Highlighting.Kate.Styles
 import           Data.Yaml.YamlLight
 import           Data.ByteString.UTF8 (toString)
 
@@ -16,7 +17,7 @@ main = do
 
     create ["assets/css/highlight.css"] $ do
         route   idRoute
-        compile $ makeItem (compressCss $ styleToCss pygments)
+        compile $ makeItem (compressCss $ styleToCss espresso)
 
     match "assets/**" $ do
         route   idRoute
