@@ -6,5 +6,15 @@
 
 <div class="aboutme">
 	<ul class="recent">
+		$for(projects)$
+				<li>
+						<a href="$url$">
+								<h2 class="post-title" itemprop="name">$name$</h2>
+						</a>
+						<p>
+							$discription$
+						</p>
+				</li>
+		$endfor$
 	</ul>
 </div>

@@ -38,12 +38,17 @@ main = do
               >>= loadAndApplyTemplate "templates/post.html"  postCtx'
               >>= relativizeUrls
 
+    match "projects/*" $ compile getResourceBody
+
     match "about.md" $ do
         route   $ setExtension "html"
         compile $ do
           posts <- take 4 <$> (recentFirst =<< loadAll ("posts/*" .&&. hasVersion "raw"))
+          projects <- recentFirst =<< loadAll "projects/*"
           let
-            aboutCtx = mconcat [listField "posts" postCtx (return posts), siteCtx, defaultContext]
+            aboutCtx = mconcat [ listField "posts" postCtx (return posts)
+                               , listField "projects" postCtx (return projects)
+                               , siteCtx, defaultContext ]
 
           pandocCompiler
               >>= loadAndApplyTemplate "templates/about.html" aboutCtx
@@ -68,8 +73,10 @@ main = do
       route idRoute
       compile $ do
         posts <- take 4 <$> (recentFirst =<< loadAll ("posts/*" .&&. hasVersion "raw"))
+        projects <- take 4 <$> (recentFirst =<< loadAll "projects/*")
         let indexCtx =
               listField "posts" postCtx (return posts) `mappend`
+              listField "projects" postCtx (return projects) `mappend`
               boolField "isIndex" (const True) `mappend`
               siteCtx `mappend`
               defaultContext

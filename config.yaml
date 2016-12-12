@@ -11,25 +11,3 @@ twitter_username: haskellhs
 github_username:  matsubara0507
 gplus_username:  hakyll
 disqus_username: haskellhs
-
-links: 
-
-# Links to include in menu navigation
-# links:
-#   - title: home
-#     url: /
-#   - title: my posts
-#     url: /posts
-#   - title: series
-#     url: /series
-#   - title: tags
-#     url: /tags
-#   - title: about me
-#     url: /about
-#
-# # projects in header index
-# projects:
-#   - name: MinRuby
-#     url: https://github.com/matsubara0507/MinRuby
-#   - name: AnaQRam
-#     url: https://github.com/matsubara0507/AnaQRam
